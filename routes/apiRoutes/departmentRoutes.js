@@ -68,8 +68,8 @@ router.post('/department', ({ body }, res) => {
 router.delete('/department/:id', (req, res) => {
   const sql = `DELETE FROM department WHERE id = ?`;
   const params = [req.params.id];
-  
-  db.query(sql, req.params.id, (err, result) => {
+
+  db.query(sql, params, (err, result) => {
     if (err) {
       res.status(400).json({ error: res.message });
     } else if (!result.affectedRows) {

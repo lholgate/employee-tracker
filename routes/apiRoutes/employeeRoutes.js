@@ -10,8 +10,7 @@ router.get('/employees', (req, res) => {
                       role.title,
                       department.name,
                       role.salary,
-                      manager.first_name,
-                      manager.last_name
+                      CONCAT(manager.first_name,' ', manager.last_name) AS manager
                FROM employee 
                LEFT JOIN role ON employee.role_id = role.id
                LEFT JOIN department ON role.department_id = department.id
@@ -38,18 +37,16 @@ router.get('/employeesByManager/:id', (req, res) => {
                       role.title,
                       department.name,
                       role.salary,
-                      manager.first_name,
-                      manager.last_name
+                      CONCAT(manager.first_name,' ', manager.last_name) AS manager
                FROM employee 
                LEFT JOIN role ON employee.role_id = role.id
                LEFT JOIN department ON role.department_id = department.id
                LEFT JOIN employee AS manager on employee.manager_id = manager.id
-               WHERE employee.manager_id = ?
-               ORDER BY employee.id ASC`;
+               WHERE employee.manager_id = ? `;
       
   const params = [req.params.id];
 
-  db.query(sql, (err, rows) => {
+  db.query(sql, params, (err, rows) => {
     if (err) {
       res.status(500).json({ error: err.message });
       return;
@@ -69,18 +66,16 @@ router.get('/employeesByDepartment/:id', (req, res) => {
                       role.title,
                       department.name,
                       role.salary,
-                      manager.first_name,
-                      manager.last_name
+                      CONCAT(manager.first_name,' ', manager.last_name) AS manager
                FROM employee 
                LEFT JOIN role ON employee.role_id = role.id
                LEFT JOIN department ON role.department_id = department.id
                LEFT JOIN employee AS manager on employee.manager_id = manager.id
-               where role.department_id = ?
-               ORDER BY employee.id ASC`;
+               where role.department_id = ? `;
 
   const params = [req.params.id];
 
-  db.query(sql, (err, rows) => {
+  db.query(sql, params, (err, rows) => {
     if (err) {
       res.status(500).json({ error: err.message });
       return;
